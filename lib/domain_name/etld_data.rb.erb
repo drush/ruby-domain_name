@@ -1,10 +1,11 @@
 class DomainName
   ETLD_DATA_DATE = '<%= etld_data_date.utc.strftime('%Y-%m-%dT%H:%M:%SZ') %>'
 
-  ETLD_DATA = Set[<%= etld_data.keys.map(&:inspect).join (",\n") %>]
+  TLD_DATA = Set[<%= etld_data.select{|k,v| v == 0 }.keys.map(&:inspect).join (",\n") %>]
 
   SUBDOMAINS = Set[<%= etld_data.select{|k,v| v == -1 }.keys.map(&:inspect).join (",\n") %>]
 
   PARENTS = Set[<%= etld_data.select{|k,v| v == 1 }.keys.map(&:inspect).join (",\n") %>]
 
+  ETLD_DATA = TLD_DATA | SUBDOMAINS | PARENTS
 end

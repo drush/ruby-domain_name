@@ -103,20 +103,16 @@ class DomainName
     else
       @tld = @hostname
     end
-    etld_data = DomainName.etld_data
-    if @canonical_tld_p = etld_data.key?(@tld)
+
+    if @canonical_tld_p = DomainName::ETLD_DATA.member?(@tld)
       subdomain = domain = nil
       parent = @hostname
       loop {
-        case etld_data[parent]
-        when 0
-          @domain = domain
-          return
-        when -1
-          @domain = subdomain
-          return
-        when 1
-          @domain = parent
+        if DomainName::ETLD_DATA.member?(parent)
+          if DomainName::SUBDOMAINS.member?(parent) then @domain = subdomain
+          elsif DomainName::PARENTS.member?(parent) then @domain = parent
+          else @domain = domain
+          end
           return
         end
         subdomain = domain

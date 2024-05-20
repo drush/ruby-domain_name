@@ -1,11 +1,10 @@
 class DomainName
   ETLD_DATA_DATE = '<%= etld_data_date.utc.strftime('%Y-%m-%dT%H:%M:%SZ') %>'
 
-  ETLD_DATA = {
-<% etld_data.each_pair { |key, value| %>    <%= key.inspect %> => <%= value.inspect %>,
-<% } %>  }
+  ETLD_DATA = Set[<%= etld_data.keys.map(&:inspect).join (",\n") %>]
 
-  def self.etld_data
-    ETLD_DATA
-  end
+  SUBDOMAINS = Set[<%= etld_data.select{|k,v| v == -1 }.keys.map(&:inspect).join (",\n") %>]
+
+  PARENTS = Set[<%= etld_data.select{|k,v| v == 1 }.keys.map(&:inspect).join (",\n") %>]
+
 end
